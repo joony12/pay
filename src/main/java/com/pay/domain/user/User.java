@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Getter
 @Setter
@@ -20,6 +21,8 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "user", indexes = {
         @Index(name = "idx_user_user_id", columnList = "user_id")
+}, uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id"})
 })
 @NoArgsConstructor
 public class User {

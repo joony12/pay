@@ -17,12 +17,15 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "room", indexes = {
-        @Index(name = "idx_room_room_id", columnList = "room_id")
+        @Index(name = "idx_room_room_id", columnList = "room_id"),
+}, uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"room_id"})
 })
 @EqualsAndHashCode(callSuper = false)
 @ToString(exclude = {"user"})

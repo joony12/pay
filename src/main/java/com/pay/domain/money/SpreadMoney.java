@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +29,8 @@ import java.util.List;
 @Entity
 @Table(name = "spread_money", indexes = {
         @Index(name = "idx_spread_token", columnList = "token")
+}, uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"token"})
 })
 @EqualsAndHashCode(callSuper = false)
 @ToString(exclude = {"room", "receiveMonies"})
