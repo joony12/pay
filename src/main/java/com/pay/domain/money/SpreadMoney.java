@@ -1,5 +1,6 @@
 package com.pay.domain.money;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pay.domain.room.Room;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -52,6 +53,7 @@ public class SpreadMoney {
     private LocalDateTime spreadStartTime;
 
     @Column(name = "spread_user_id")
+    @JsonIgnore
     private String spreadUserId;
 
     @OneToMany

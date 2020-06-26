@@ -2,10 +2,13 @@ package com.pay.application;
 
 import com.pay.domain.HeaderRequestVO;
 import com.pay.domain.money.MoneyService;
+import com.pay.domain.money.SpreadMoney;
 import com.pay.domain.money.vo.SpreadMoneyRequestVO;
 import com.pay.domain.token.TokenService;
 import com.pay.exception.TokenCreateException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -32,5 +35,10 @@ public class MoneyApplicationImpl implements MoneyApplication {
     @Override
     public Long receive(HeaderRequestVO headerRequestVO, String token) {
         return moneyService.getReceiveMoney(headerRequestVO, token);
+    }
+
+    @Override
+    public Page<SpreadMoney> spreadList(HeaderRequestVO headerRequestVO, String token, Pageable pageable) {
+        return moneyService.spreadList(headerRequestVO, token, pageable);
     }
 }

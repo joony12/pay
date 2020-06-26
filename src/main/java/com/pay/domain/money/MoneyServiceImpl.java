@@ -4,6 +4,7 @@ import com.pay.domain.HeaderRequestVO;
 import com.pay.domain.money.vo.SpreadMoneyRequestVO;
 import com.pay.domain.room.Room;
 import com.pay.domain.user.User;
+import com.pay.exception.NotFoundSpreadListException;
 import com.pay.exception.NotFoundUserException;
 import com.pay.exception.NotParticipateRoomException;
 import com.pay.exception.ReceiveMoneyTimeOutException;
@@ -13,6 +14,9 @@ import com.pay.infra.db.SpreadMoneyCrudRepository;
 import com.pay.infra.db.UserCrudRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,6 +94,23 @@ public class MoneyServiceImpl implements MoneyService {
         }
 
         return receiveMoney.getReceiveMoney();
+    }
+
+    @Override
+    @Transactional
+    @Cacheable(cacheNames = "spreadMoneyList", key = "#headerRequestVO.userId + '_' + #token + #pageable.pageNumber + '_' + #pageable.pageSize", unless = "#result == null")
+    public Page<SpreadMoney> spreadList(HeaderRequestVO headerRequestVO, String token, Pageable pageable) {
+        String userId = headerRequestVO.getUserId();
+
+        Page<SpreadMoney> spreadMonies = spreadMoneyCrudRepository.findSpreadMoneyByTokenAndSpreadStartTimeAfter(token, LocalDateTime.now().minusDays(7), pageable);
+
+        for (SpreadMoney spreadMoney : spreadMonies) {
+            if (!spreadMoney.getSpreadUserId().equals(userId)) {
+                throw new NotFoundSpreadListException();
+            }
+        }
+
+        return spreadMonies;
     }
 
     private List<ReceiveMoney> createReceiveMoneyList(HeaderRequestVO headerRequestVO, SpreadMoneyRequestVO spreadMoneyRequestVO) {

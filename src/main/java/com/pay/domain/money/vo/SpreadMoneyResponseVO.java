@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -12,4 +15,10 @@ import lombok.Setter;
 public class SpreadMoneyResponseVO {
 
     private String token;
+
+    private Long spreadAmountMoney;
+
+    private LocalDateTime spreadStartTime;
+
+    List<ReceiveMoneyResponseVO> responseVOList;
 }
