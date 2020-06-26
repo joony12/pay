@@ -4,6 +4,8 @@ import com.pay.application.MoneyApplication;
 import com.pay.domain.HeaderRequestVO;
 import com.pay.domain.money.vo.SpreadMoneyRequestVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +24,11 @@ public class MoneyController {
                          @RequestBody SpreadMoneyRequestVO spreadMoneyRequestVO) {
 
         return moneyApplication.spread(headerRequestVO, spreadMoneyRequestVO);
+    }
+
+    @GetMapping("/receive/tokens/{token}")
+    public Long receive(@SessionAttribute(name = "headerRequestVO") HeaderRequestVO headerRequestVO,
+                        @PathVariable(value = "token") String token) {
+        return moneyApplication.receive(headerRequestVO, token);
     }
 }

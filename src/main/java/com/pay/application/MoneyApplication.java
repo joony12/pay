@@ -5,4 +5,6 @@ import com.pay.domain.money.vo.SpreadMoneyRequestVO;
 
 public interface MoneyApplication {
     String spread(HeaderRequestVO headerRequestVO, SpreadMoneyRequestVO spreadMoneyRequestVO);
+
+    Long receive(HeaderRequestVO headerRequestVO, String token);
 }

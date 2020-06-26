@@ -28,4 +28,9 @@ public class MoneyApplicationImpl implements MoneyApplication {
         moneyService.createSpreadMoney(headerRequestVO, spreadMoneyRequestVO, token);
         return token;
     }
+
+    @Override
+    public Long receive(HeaderRequestVO headerRequestVO, String token) {
+        return moneyService.getReceiveMoney(headerRequestVO, token);
+    }
 }
