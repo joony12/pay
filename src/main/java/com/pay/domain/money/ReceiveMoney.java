@@ -13,13 +13,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "receive_money")
+@Table(name = "receive_money", indexes = {
+        @Index(name = "idx_receive_money_time", columnList = "receive_time")
+})
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

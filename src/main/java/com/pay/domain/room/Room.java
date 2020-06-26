@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -20,7 +21,9 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "room")
+@Table(name = "room", indexes = {
+        @Index(name = "idx_room_room_id", columnList = "room_id")
+})
 @EqualsAndHashCode(callSuper = false)
 @ToString(exclude = {"user"})
 @NoArgsConstructor

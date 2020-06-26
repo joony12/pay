@@ -2,6 +2,7 @@ package com.pay;
 
 import com.pay.errorEnum.ErrorCodeEnum;
 import com.pay.exception.NotFoundRoomException;
+import com.pay.exception.NotFoundSpreadListException;
 import com.pay.exception.NotFoundUserException;
 import com.pay.exception.NotParticipateRoomException;
 import com.pay.exception.ReceiveMoneyTimeOutException;
@@ -58,6 +59,12 @@ public class RestControllerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseVO receiveMoneyTimeOutException() {
         return getErrorResponse(ErrorCodeEnum.ERROR_0006);
+    }
+
+    @ExceptionHandler(value = {NotFoundSpreadListException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponseVO notFoundSpreadListException() {
+        return getErrorResponse(ErrorCodeEnum.ERROR_0007);
     }
 
     private ErrorResponseVO getErrorResponse(ErrorCodeEnum errorCodeEnum) {

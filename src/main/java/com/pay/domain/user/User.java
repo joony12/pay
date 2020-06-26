@@ -11,13 +11,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 
 @Getter
 @Setter
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "user")
+@Table(name = "user", indexes = {
+        @Index(name = "idx_user_user_id", columnList = "user_id")
+})
 @NoArgsConstructor
 public class User {
 
