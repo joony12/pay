@@ -2,10 +2,12 @@ package com.pay.util;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
+@SpringBootTest
 class EncryptUtilTest {
 
     private EncryptUtil encryptUtil = new EncryptUtil();

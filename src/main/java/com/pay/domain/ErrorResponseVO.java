@@ -1,4 +1,4 @@
-package com.pay;
+package com.pay.domain;
 
 import lombok.Builder;
 import lombok.Getter;

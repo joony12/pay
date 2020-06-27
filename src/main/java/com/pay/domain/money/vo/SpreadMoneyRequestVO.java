@@ -1,17 +1,22 @@
 package com.pay.domain.money.vo;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class SpreadMoneyRequestVO {
 
-    private Long spreadMoney;
+    private Long spreadAmountMoney;
 
     private Long spreadUserCount;
+
+    @Builder
+    public SpreadMoneyRequestVO(Long spreadAmountMoney, Long spreadUserCount) {
+        this.spreadAmountMoney = spreadAmountMoney;
+        this.spreadUserCount = spreadUserCount;
+    }
 }

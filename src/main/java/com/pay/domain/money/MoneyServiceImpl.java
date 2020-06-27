@@ -4,6 +4,7 @@ import com.pay.domain.HeaderRequestVO;
 import com.pay.domain.money.vo.SpreadMoneyRequestVO;
 import com.pay.domain.room.Room;
 import com.pay.domain.user.User;
+import com.pay.exception.NotFoundRoomException;
 import com.pay.exception.NotFoundSpreadListException;
 import com.pay.exception.NotFoundUserException;
 import com.pay.exception.NotParticipateRoomException;
@@ -41,9 +42,12 @@ public class MoneyServiceImpl implements MoneyService {
         List<Room> rooms = roomCrudRepository.findRoomByRoomId(roomId);
         List<ReceiveMoney> receiveMonies = createReceiveMoneyList(headerRequestVO, spreadMoneyRequestVO);
 
+        if (rooms.size() == 0) {
+            throw new NotFoundRoomException();
+        }
         SpreadMoney spreadMoney = SpreadMoney.builder()
                 .room(rooms.get(0))
-                .spreadAmountMoney(spreadMoneyRequestVO.getSpreadMoney())
+                .spreadAmountMoney(spreadMoneyRequestVO.getSpreadAmountMoney())
                 .spreadUserCount(spreadMoneyRequestVO.getSpreadUserCount())
                 .token(token)
                 .spreadUserId(headerRequestVO.getUserId())
@@ -113,9 +117,15 @@ public class MoneyServiceImpl implements MoneyService {
         return spreadMonies;
     }
 
+    @Override
+    @Transactional
+    public SpreadMoney findSpreadMoneyByToken(String token) {
+        return spreadMoneyCrudRepository.findSpreadMoneyByToken(token).orElse(null);
+    }
+
     private List<ReceiveMoney> createReceiveMoneyList(HeaderRequestVO headerRequestVO, SpreadMoneyRequestVO spreadMoneyRequestVO) {
 
-        long spreadMoney = spreadMoneyRequestVO.getSpreadMoney();
+        long spreadMoney = spreadMoneyRequestVO.getSpreadAmountMoney();
 
         List<ReceiveMoney> receiveMonies = new ArrayList<>();
         long spreadUserCount = spreadMoneyRequestVO.getSpreadUserCount();

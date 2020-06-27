@@ -11,4 +11,6 @@ public interface MoneyService {
     Long getReceiveMoney(HeaderRequestVO headerRequestVO, String token);
 
     Page<SpreadMoney> spreadList(HeaderRequestVO headerRequestVO, String token, Pageable pageable);
+
+    SpreadMoney findSpreadMoneyByToken(String token);
 }

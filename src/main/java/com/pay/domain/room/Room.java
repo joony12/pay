@@ -1,6 +1,7 @@
 package com.pay.domain.room;
 
 import com.pay.domain.user.User;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,15 +18,12 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "room", indexes = {
         @Index(name = "idx_room_room_id", columnList = "room_id"),
-}, uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"room_id"})
 })
 @EqualsAndHashCode(callSuper = false)
 @ToString(exclude = {"user"})
@@ -43,4 +41,10 @@ public class Room {
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx")
     private User user;
+
+    @Builder
+    public Room(String roomId, User user) {
+        this.roomId = roomId;
+        this.user = user;
+    }
 }
