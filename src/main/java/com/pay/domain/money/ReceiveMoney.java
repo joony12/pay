@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,7 +27,7 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class ReceiveMoney {
+public class ReceiveMoney implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

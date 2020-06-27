@@ -40,7 +40,7 @@ public class MoneyController {
     @GetMapping("/spread/tokens/{token}")
     public Page<SpreadMoney> spreadList(@SessionAttribute(name = "headerRequestVO") HeaderRequestVO headerRequestVO,
                                         @PathVariable(value = "token") String token,
-                                        @PageableDefault(size = 20, sort = "spread_start_time", direction = Sort.Direction.DESC) Pageable pageable) {
+                                        @PageableDefault(size = 20, sort = "startTime", direction = Sort.Direction.DESC) Pageable pageable) {
         return moneyApplication.spreadList(headerRequestVO, token, pageable);
     }
 }

@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -25,7 +26,7 @@ import javax.persistence.UniqueConstraint;
         @UniqueConstraint(columnNames = {"user_id"})
 })
 @NoArgsConstructor
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

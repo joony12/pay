@@ -1,6 +1,5 @@
 package com.pay.domain.money;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pay.domain.room.Room;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -21,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,7 +35,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @ToString(exclude = {"room", "receiveMonies"})
 @NoArgsConstructor
-public class SpreadMoney {
+public class SpreadMoney implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,24 +46,23 @@ public class SpreadMoney {
     @JoinColumn(name = "room_idx")
     private Room room;
 
-    @Column
+    @Column(name = "token")
     private String token;
 
-    @Column(name = "spread_amount_money")
-    private Long spreadAmountMoney;
+    @Column(name = "amount_money")
+    private Long amountMoney;
 
-    @Column(name = "spread_user_count")
-    private Long spreadUserCount;
+    @Column(name = "user_count")
+    private Long userCount;
 
-    @Column(name = "spread_start_time")
-    private LocalDateTime spreadStartTime;
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
 
     @Column(name = "spread_user_id")
-    @JsonIgnore
     private String spreadUserId;
 
     @OneToMany
-    @JoinColumn(name="spread_money_idx")
+    @JoinColumn(name = "spread_money_idx")
     private List<ReceiveMoney> receiveMonies;
 
     @Builder
@@ -71,9 +70,9 @@ public class SpreadMoney {
         this.room = room;
         this.token = token;
         this.spreadUserId = spreadUserId;
-        this.spreadAmountMoney = spreadAmountMoney;
-        this.spreadUserCount = spreadUserCount;
-        this.spreadStartTime = LocalDateTime.now();
+        this.amountMoney = spreadAmountMoney;
+        this.userCount = spreadUserCount;
+        this.startTime = LocalDateTime.now();
         this.receiveMonies = receiveMonies;
     }
 }

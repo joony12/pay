@@ -13,8 +13,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @SpringBootTest
 @Transactional
@@ -65,19 +70,37 @@ class MoneyApplicationImplTest {
         SpreadMoney spreadMoney = moneyService.findSpreadMoneyByToken(token);
         Assertions.assertNotNull(spreadMoney);
 
-        Assertions.assertEquals(spreadMoney.getSpreadAmountMoney(), spreadAmountMoney);
+        Assertions.assertEquals(spreadMoney.getAmountMoney(), spreadAmountMoney);
         Assertions.assertEquals(spreadMoney.getSpreadUserId(), userId);
         Assertions.assertEquals(spreadMoney.getRoom().getRoomId(), roomId);
         Assertions.assertEquals(spreadMoney.getReceiveMonies().size(), spreadUserCount);
     }
 
     @Test
-    void 받기() {
-
-    }
-
-    @Test
     void 조회() {
 
+        String userId = "user_01";
+        String roomId = "room_01";
+
+        HeaderRequestVO headerRequestVO = HeaderRequestVO.builder()
+                .userId(userId)
+                .roomId(roomId)
+                .build();
+
+        String token = "716";
+        Pageable pageable = PageRequest.of(0, 20);
+
+        Page<SpreadMoney> spreadMonies = moneyService.spreadList(headerRequestVO, token, pageable);
+
+        for (SpreadMoney spreadMoney : spreadMonies) {
+            //7일 동안 조회 가능
+            if (spreadMoney.getStartTime().isBefore(LocalDateTime.now().minusDays(7))) {
+                Assertions.fail();
+            }
+
+            if (!spreadMoney.getSpreadUserId().equals(userId)) {
+                Assertions.fail();
+            }
+        }
     }
 }

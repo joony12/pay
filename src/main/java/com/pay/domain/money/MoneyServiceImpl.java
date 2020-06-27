@@ -85,7 +85,7 @@ public class MoneyServiceImpl implements MoneyService {
             return 0L;
         }
 
-        if (spreadMoney.getSpreadStartTime().plusMinutes(10).isBefore(LocalDateTime.now())) {
+        if (spreadMoney.getStartTime().plusMinutes(10).isBefore(LocalDateTime.now())) {
             throw new ReceiveMoneyTimeOutException();
         }
 
@@ -101,12 +101,11 @@ public class MoneyServiceImpl implements MoneyService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "spreadMoneyList", key = "#headerRequestVO.userId + '_' + #token + #pageable.pageNumber + '_' + #pageable.pageSize", unless = "#result == null")
     public Page<SpreadMoney> spreadList(HeaderRequestVO headerRequestVO, String token, Pageable pageable) {
         String userId = headerRequestVO.getUserId();
-
-        Page<SpreadMoney> spreadMonies = spreadMoneyCrudRepository.findSpreadMoneyByTokenAndSpreadStartTimeAfter(token, LocalDateTime.now().minusDays(7), pageable);
+        Page<SpreadMoney> spreadMonies = spreadMoneyCrudRepository.findSpreadMoneyByTokenAndStartTimeAfter(token, LocalDateTime.now().minusDays(7), pageable);
 
         for (SpreadMoney spreadMoney : spreadMonies) {
             if (!spreadMoney.getSpreadUserId().equals(userId)) {

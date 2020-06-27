@@ -18,5 +18,5 @@ public interface SpreadMoneyCrudRepository extends JpaRepository<SpreadMoney, Lo
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "3000")})
     Optional<SpreadMoney> findSpreadMoneyByToken(String token);
 
-    Page<SpreadMoney> findSpreadMoneyByTokenAndSpreadStartTimeAfter(String token, LocalDateTime beforeTime, Pageable pageable);
+    Page<SpreadMoney> findSpreadMoneyByTokenAndStartTimeAfter(String token, LocalDateTime beforeSevenDateTime, Pageable pageable);
 }
