@@ -10,9 +10,9 @@ import com.pay.util.header.HeaderCode;
 import com.pay.vo.ErrorResponseVO;
 import com.pay.vo.SpreadRequestVO;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -216,7 +216,7 @@ class MoneyControllerTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     void 뿌린지_10분이_지난_경우() throws Exception {
 
         SpreadRequestVO requestVO = new SpreadRequestVO();
