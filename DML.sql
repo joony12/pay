@@ -1,6 +1,6 @@
-insert into user (user_id) values ('user_01');
-insert into user (user_id) values ('user_02');
-insert into user (user_id) values ('user_03');
+insert into user (user_id) values (1);
+insert into user (user_id) values (2);
+insert into user (user_id) values (3);
 
 insert into room (room_id, user_idx) values('room_01', '1');
 insert into room (room_id, user_idx) values('room_01', '2');
