@@ -12,6 +12,7 @@ import com.pay.vo.ReceivedHistoryResponseVO;
 import com.pay.vo.SpreadHistoryResponseVO;
 import com.pay.vo.SpreadRequestVO;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,10 @@ public class MoneyServiceImpl implements MoneyService {
 
         User user = getUser(userId);
         Room room = getRoom(roomId);
+
+        if (ObjectUtils.isEmpty(room)) {
+            throw new UnRegisteredUserException("등록되지 않은 채팅방 입니다.");
+        }
 
         int money = spreadRequestVO.getMoney();
         int userCount = spreadRequestVO.getUserCount();
@@ -148,11 +153,11 @@ public class MoneyServiceImpl implements MoneyService {
     }
 
     private User getUser(Long userId) {
-        return userCrudRepository.findByUserId(userId).orElse(null);
+        return userCrudRepository.findByUserId(userId).orElseThrow(() -> new UnRegisteredUserException("등록되지 않은 유저입니다."));
     }
 
     private Room getRoom(String roomId) {
-        return roomCrudRepository.findByRoomId(roomId).orElse(null);
+        return roomCrudRepository.findAllByRoomId(roomId).get(0);
     }
 
     private Money createSpreadMoneyHistory(User user, Room room, int money, int userCount, String token) {

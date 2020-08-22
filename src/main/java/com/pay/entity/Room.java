@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "room", indexes = {
         @Index(name = "idx_room_room_id", columnList = "room_id")
-}, uniqueConstraints = {@UniqueConstraint(columnNames = {"room_id"})})
+})
 @EqualsAndHashCode
 @ToString(exclude = {"user"})
 @NoArgsConstructor

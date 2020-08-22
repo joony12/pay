@@ -56,6 +56,18 @@ public class RestControllerExceptionHandler {
         return getErrorResponse(ErrorTypeEnum.ERROR_0006);
     }
 
+    @ExceptionHandler(value = {UnRegisteredRoomException.class})
+    public ErrorResponseVO unRegisteredRoomException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0006);
+    }
+
+    @ExceptionHandler(value = {UnRegisteredUserException.class})
+    public ErrorResponseVO unRegisteredUserException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0006);
+    }
+
     private ErrorResponseVO getErrorResponse(ErrorTypeEnum errorTypeEnum) {
         return ErrorResponseVO.builder()
                 .errorCode(errorTypeEnum.getErrorCode())

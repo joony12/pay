@@ -3,8 +3,8 @@ package com.pay.repository;
 import com.pay.entity.Room;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface RoomCrudRepository extends CrudRepository<Room, Long> {
-    Optional<Room> findByRoomId(String roomId);
+    List<Room> findAllByRoomId(String roomId);
 }
