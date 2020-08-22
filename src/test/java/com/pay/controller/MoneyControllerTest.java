@@ -290,6 +290,29 @@ class MoneyControllerTest {
                 .andReturn();
 
         ErrorResponseVO responseVO = objectMapper.readValue(result.getResponse().getContentAsString(), ErrorResponseVO.class);
+        Assertions.assertEquals(responseVO.getErrorCode(), ErrorTypeEnum.ERROR_0005.getErrorCode());
+    }
+
+    @Test
+    void 토큰이_유효하지_않은_경() throws Exception {
+        SpreadRequestVO requestVO = new SpreadRequestVO();
+        requestVO.setMoney(50000);
+        requestVO.setUserCount(5);
+
+        Long userId = 1L;
+        String roomId = "room1";
+        String token = tokenService.getToken(userId);
+        moneyService.spread(requestVO, userId, roomId, token);
+
+        MvcResult result = mockMvc.perform(get("/money/v1/spread/tokens/" + "sss")
+                .header(HeaderCode.X_USER_ID, "1")
+                .header(HeaderCode.X_ROOM_ID, "room1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ErrorResponseVO responseVO = objectMapper.readValue(result.getResponse().getContentAsString(), ErrorResponseVO.class);
         Assertions.assertEquals(responseVO.getErrorCode(), ErrorTypeEnum.ERROR_0010.getErrorCode());
     }
 

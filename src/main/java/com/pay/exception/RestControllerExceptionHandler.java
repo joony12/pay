@@ -47,7 +47,7 @@ public class RestControllerExceptionHandler {
     @ExceptionHandler(value = {SpreadHistoryTimeOutException.class})
     public ErrorResponseVO spreadHistoryTimeOutException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorTypeEnum.ERROR_0004);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0005);
     }
 
     @ExceptionHandler(value = {UnAuthorizedException.class})
