@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "money", indexes = {
         @Index(name = "idx_spread_token", columnList = "token")
 })
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @ToString(exclude = {"room"})
 @NoArgsConstructor
 public class Money implements Serializable {

@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @Table(name = "user", indexes = {
         @Index(name = "idx01_user_id", columnList = "user_id")
 }, uniqueConstraints = {

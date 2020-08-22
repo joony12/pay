@@ -8,8 +8,4 @@ public class SpreadHistoryTimeOutException extends RuntimeException {
     public SpreadHistoryTimeOutException(String message) {
         super(message);
     }
-
-    public SpreadHistoryTimeOutException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

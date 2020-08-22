@@ -20,32 +20,38 @@ public class RestControllerExceptionHandler {
         return getErrorResponse(ErrorTypeEnum.ERROR_9999);
     }
 
-    @ExceptionHandler(value = {UnAuthorizedException.class})
-    public ErrorResponseVO unAuthorizedException(Exception ex) {
+    @ExceptionHandler(value = {AlreadyReceivedMoneyException.class})
+    public ErrorResponseVO alreadyReceivedMoneyException(Exception ex) {
         log.error(ex.getMessage(), ex);
         return getErrorResponse(ErrorTypeEnum.ERROR_0001);
-    }
-
-    @ExceptionHandler(value = {TokenCreateException.class})
-    public ErrorResponseVO tokenCreateException(Exception ex) {
-        log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorTypeEnum.ERROR_0002);
-    }
-
-    @ExceptionHandler(value = {NotFoundUserException.class})
-    public ErrorResponseVO notFoundUserException(Exception ex) {
-        log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorTypeEnum.ERROR_0003);
     }
 
     @ExceptionHandler(value = {NotParticipateRoomException.class})
     public ErrorResponseVO notParticipateRoomException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorTypeEnum.ERROR_0005);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0002);
     }
 
     @ExceptionHandler(value = {ReceiveMoneyTimeOutException.class})
     public ErrorResponseVO receiveMoneyTimeOutException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0003);
+    }
+
+    @ExceptionHandler(value = {SelfReceivedMoneyException.class})
+    public ErrorResponseVO selfReceivedMoneyException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0004);
+    }
+
+    @ExceptionHandler(value = {SpreadHistoryTimeOutException.class})
+    public ErrorResponseVO spreadHistoryTimeOutException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0004);
+    }
+
+    @ExceptionHandler(value = {UnAuthorizedException.class})
+    public ErrorResponseVO unAuthorizedException(Exception ex) {
         log.error(ex.getMessage(), ex);
         return getErrorResponse(ErrorTypeEnum.ERROR_0006);
     }

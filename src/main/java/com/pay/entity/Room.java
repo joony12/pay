@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Table(name = "room", indexes = {
         @Index(name = "idx_room_room_id", columnList = "room_id")
 }, uniqueConstraints = {@UniqueConstraint(columnNames = {"room_id"})})
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @ToString(exclude = {"user"})
 @NoArgsConstructor
 public class Room implements Serializable {

@@ -91,7 +91,7 @@ public class MoneyServiceImpl implements MoneyService {
 
     @Override
     @Transactional
-    public SpreadHistoryResponseVO getSpreadHistory(Long userId, String roomId, String token) {
+    public SpreadHistoryResponseVO getSpreadHistory(String token) {
         Money spreadMoney = getSpreadMoney(token);
         checkEnableSearch(spreadMoney.getCreateDt());
 
