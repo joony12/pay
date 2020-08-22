@@ -96,9 +96,14 @@ public class MoneyServiceImpl implements MoneyService {
 
     @Override
     @Transactional
-    public SpreadHistoryResponseVO getSpreadHistory(String token) {
+    public SpreadHistoryResponseVO getSpreadHistory(String userId, String token) {
         Money spreadMoney = getSpreadMoney(token);
-        checkEnableSearch(spreadMoney.getCreateDt());
+
+        if (ObjectUtils.isEmpty(spreadMoney)) {
+            throw new InvalidTokenException("유효하지 않은 토큰 정보입니다.");
+        }
+
+        checkEnableSearch(spreadMoney, userId);
 
         List<Money> receivedMoneyList = getReceivedMoneyList(token);
         int receivedMoney = receivedMoneyList.stream().mapToInt(Money::getMoney).sum();
@@ -111,8 +116,12 @@ public class MoneyServiceImpl implements MoneyService {
                 .build();
     }
 
-    private void checkEnableSearch(LocalDateTime createdDt) {
-        if (createdDt.plusDays(7).compareTo(LocalDateTime.now()) < 0) {
+    private void checkEnableSearch(Money spreadMoney, String userId) {
+        if (!spreadMoney.getUserId().equals(userId)) {
+            throw new SpreadHistorySearchException("뿌린 사람 자신만 조회를 할 수 있습니다.");
+        }
+
+        if (spreadMoney.getCreatedDt().plusDays(7).compareTo(LocalDateTime.now()) < 0) {
             throw new SpreadHistoryTimeOutException("뿌린 건에 대한 조회는 7일 동안 할 수 있습니다.");
         }
     }

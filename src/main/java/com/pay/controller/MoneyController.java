@@ -39,6 +39,6 @@ public class MoneyController {
                                                     @RequestHeader(value = HeaderCode.X_ROOM_ID) String roomId,
                                                     @PathVariable(value = "token") String token) {
 
-        return moneyService.getSpreadHistory(token);
+        return moneyService.getSpreadHistory(userId, token);
     }
 }

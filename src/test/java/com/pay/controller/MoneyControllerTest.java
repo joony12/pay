@@ -8,6 +8,7 @@ import com.pay.service.user.UserService;
 import com.pay.util.error.ErrorTypeEnum;
 import com.pay.util.header.HeaderCode;
 import com.pay.vo.ErrorResponseVO;
+import com.pay.vo.SpreadHistoryResponseVO;
 import com.pay.vo.SpreadRequestVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -23,8 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -239,5 +239,81 @@ class MoneyControllerTest {
 
         ErrorResponseVO responseVO = objectMapper.readValue(result.getResponse().getContentAsString(), ErrorResponseVO.class);
         Assertions.assertEquals(responseVO.getErrorCode(), ErrorTypeEnum.ERROR_0003.getErrorCode());
+    }
+
+    /*
+    * 조회
+    * */
+    @Test
+    void 뿌린_사람이_내가_아닌데_조회를_하려는_경우() throws Exception {
+        SpreadRequestVO requestVO = new SpreadRequestVO();
+        requestVO.setMoney(50000);
+        requestVO.setUserCount(5);
+
+        Long userId = 1L;
+        String roomId = "room1";
+        String token = tokenService.getToken(userId);
+        moneyService.spread(requestVO, userId, roomId, token);
+
+        MvcResult result = mockMvc.perform(get("/money/v1/spread/tokens/" + token)
+                .header(HeaderCode.X_USER_ID, "2")
+                .header(HeaderCode.X_ROOM_ID, "room1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ErrorResponseVO responseVO = objectMapper.readValue(result.getResponse().getContentAsString(), ErrorResponseVO.class);
+        Assertions.assertEquals(responseVO.getErrorCode(), ErrorTypeEnum.ERROR_0009.getErrorCode());
+    }
+
+    @Test
+    @Disabled
+    void 뿌린지_7일이_지나_조회가_안되는_경우() throws Exception {
+        SpreadRequestVO requestVO = new SpreadRequestVO();
+        requestVO.setMoney(50000);
+        requestVO.setUserCount(5);
+
+        Long userId = 1L;
+        String roomId = "room1";
+        String token = tokenService.getToken(userId);
+        moneyService.spread(requestVO, userId, roomId, token);
+
+        Thread.sleep(1000 * 3600 * 24 * 8);
+
+        MvcResult result = mockMvc.perform(get("/money/v1/spread/tokens/" + token)
+                .header(HeaderCode.X_USER_ID, "1")
+                .header(HeaderCode.X_ROOM_ID, "room1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ErrorResponseVO responseVO = objectMapper.readValue(result.getResponse().getContentAsString(), ErrorResponseVO.class);
+        Assertions.assertEquals(responseVO.getErrorCode(), ErrorTypeEnum.ERROR_0010.getErrorCode());
+    }
+
+    @Test
+    void 뿌린_내역_조회() throws Exception {
+        SpreadRequestVO requestVO = new SpreadRequestVO();
+        requestVO.setMoney(50000);
+        requestVO.setUserCount(5);
+
+        Long userId = 1L;
+        String roomId = "room1";
+        String token = tokenService.getToken(userId);
+        moneyService.spread(requestVO, userId, roomId, token);
+
+        MvcResult result = mockMvc.perform(get("/money/v1/spread/tokens/" + token)
+                .header(HeaderCode.X_USER_ID, "1")
+                .header(HeaderCode.X_ROOM_ID, "room1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        SpreadHistoryResponseVO historyResponseVO = objectMapper.readValue(result.getResponse().getContentAsString(), SpreadHistoryResponseVO.class);
+
+        Assertions.assertEquals(requestVO.getMoney(), historyResponseVO.getSpreadMoney());
     }
 }

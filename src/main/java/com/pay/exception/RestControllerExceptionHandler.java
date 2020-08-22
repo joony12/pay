@@ -59,13 +59,25 @@ public class RestControllerExceptionHandler {
     @ExceptionHandler(value = {UnRegisteredRoomException.class})
     public ErrorResponseVO unRegisteredRoomException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorTypeEnum.ERROR_0006);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0007);
     }
 
     @ExceptionHandler(value = {UnRegisteredUserException.class})
     public ErrorResponseVO unRegisteredUserException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorTypeEnum.ERROR_0006);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0008);
+    }
+
+    @ExceptionHandler(value = {SpreadHistorySearchException.class})
+    public ErrorResponseVO spreadHistorySearchException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0009);
+    }
+
+    @ExceptionHandler(value = {InvalidTokenException.class})
+    public ErrorResponseVO invalidTokenException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0010);
     }
 
     private ErrorResponseVO getErrorResponse(ErrorTypeEnum errorTypeEnum) {

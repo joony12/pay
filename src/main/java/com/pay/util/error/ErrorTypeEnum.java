@@ -13,6 +13,8 @@ public enum ErrorTypeEnum {
     ERROR_0006("error_0006", "인증되지 않은 사용자입니다."),
     ERROR_0007("error_0007", "등록되지 않은 사용자입니다."),
     ERROR_0008("error_0008", "등록되지 않은 채팅방입니다."),
+    ERROR_0009("error_0009", "뿌린 사람 자신만 조회를 할 수 있습니다."),
+    ERROR_0010("error_0010", "유효하지 않은 토큰 정보입니다."),
     ERROR_9999("error_9999", "알 수 없는 에러, 관리자에게 문의하세요.");
 
     private final String errorCode;
