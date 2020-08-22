@@ -327,6 +327,14 @@ class MoneyControllerTest {
         String token = tokenService.getToken(userId);
         moneyService.spread(requestVO, userId, roomId, token);
 
+        MvcResult receiveResult = mockMvc.perform(put("/money/v1/receive/tokens/" + token)
+                .header(HeaderCode.X_USER_ID, "2")
+                .header(HeaderCode.X_ROOM_ID, "room1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
         MvcResult result = mockMvc.perform(get("/money/v1/spread/tokens/" + token)
                 .header(HeaderCode.X_USER_ID, "1")
                 .header(HeaderCode.X_ROOM_ID, "room1")
@@ -338,5 +346,7 @@ class MoneyControllerTest {
         SpreadHistoryResponseVO historyResponseVO = objectMapper.readValue(result.getResponse().getContentAsString(), SpreadHistoryResponseVO.class);
 
         Assertions.assertEquals(requestVO.getMoney(), historyResponseVO.getSpreadMoney());
+        Assertions.assertEquals(1, historyResponseVO.getHistoryResponseVOList().size());
+        Assertions.assertEquals(2, historyResponseVO.getHistoryResponseVOList().get(0).getUserId());
     }
 }

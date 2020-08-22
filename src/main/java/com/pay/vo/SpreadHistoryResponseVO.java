@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -14,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SpreadHistoryResponseVO {
 
-    private LocalDateTime spreadDt;
+    private String spreadDt;
 
     private int spreadMoney;
 

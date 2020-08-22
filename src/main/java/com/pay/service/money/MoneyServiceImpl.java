@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,8 +65,8 @@ public class MoneyServiceImpl implements MoneyService {
 
         int spreadUserCount = spreadMoney.getUserCount();
         User user = getUser(userId);
-        List<Money> receiveMoneyList = getReceivedMoneyUserNotInList(token, user);
-        checkAlreadyReceivedMoney(spreadUserCount, receiveMoneyList.size());
+        List<Money> receiveMoneyList = getReceiveEnableMoneyList(token);
+        checkAlreadyReceivedMoney(user.getUserId(), token);
 
         return calculateReceiveMoney(spreadUserCount, user, receiveMoneyList);
     }
@@ -88,15 +89,15 @@ public class MoneyServiceImpl implements MoneyService {
         return 0;
     }
 
-    private void checkAlreadyReceivedMoney(int spreadUserCount, int receivedMoneyListSize) {
-        if (spreadUserCount != receivedMoneyListSize) {
+    private void checkAlreadyReceivedMoney(Long userId, String token) {
+        if (moneyCrudRepository.findByUserIdAndTokenAndMoneyTypeEnum(userId, token, MoneyTypeEnum.RECEIVE).isPresent()) {
             throw new AlreadyReceivedMoneyException("뿌리기 당 한 사용자는 한번만 받을 수 있습니다.");
         }
     }
 
     @Override
     @Transactional
-    public SpreadHistoryResponseVO getSpreadHistory(String userId, String token) {
+    public SpreadHistoryResponseVO getSpreadHistory(Long userId, String token) {
         Money spreadMoney = getSpreadMoney(token);
 
         if (ObjectUtils.isEmpty(spreadMoney)) {
@@ -109,19 +110,19 @@ public class MoneyServiceImpl implements MoneyService {
         int receivedMoney = receivedMoneyList.stream().mapToInt(Money::getMoney).sum();
 
         return SpreadHistoryResponseVO.builder()
-                .spreadDt(spreadMoney.getCreateDt())
+                .spreadDt(spreadMoney.getCreateDt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .spreadMoney(spreadMoney.getMoney())
                 .receivedMoney(receivedMoney)
                 .historyResponseVOList(getHistoryResponseVOList(receivedMoneyList))
                 .build();
     }
 
-    private void checkEnableSearch(Money spreadMoney, String userId) {
-        if (!spreadMoney.getUserId().equals(userId)) {
+    private void checkEnableSearch(Money spreadMoney, Long userId) {
+        if (spreadMoney.getUserId() != userId) {
             throw new SpreadHistorySearchException("뿌린 사람 자신만 조회를 할 수 있습니다.");
         }
 
-        if (spreadMoney.getCreatedDt().plusDays(7).compareTo(LocalDateTime.now()) < 0) {
+        if (spreadMoney.getCreateDt().plusDays(7).compareTo(LocalDateTime.now()) < 0) {
             throw new SpreadHistoryTimeOutException("뿌린 건에 대한 조회는 7일 동안 할 수 있습니다.");
         }
     }
@@ -153,8 +154,8 @@ public class MoneyServiceImpl implements MoneyService {
         return moneyCrudRepository.findByTokenAndMoneyTypeEnum(token, MoneyTypeEnum.SPREAD).orElse(null);
     }
 
-    private List<Money> getReceivedMoneyUserNotInList(String token, User user) {
-        return moneyCrudRepository.findAllByTokenAndMoneyTypeEnumAndUserIdNot(token, MoneyTypeEnum.RECEIVE, user.getUserId());
+    private List<Money> getReceiveEnableMoneyList(String token) {
+        return moneyCrudRepository.findAllByTokenAndMoneyTypeEnum(token, MoneyTypeEnum.RECEIVE);
     }
 
     private List<Money> getReceivedMoneyList(String token) {
@@ -189,14 +190,10 @@ public class MoneyServiceImpl implements MoneyService {
 
             int distributedMoney = money / userCount;
 
-            if (i == userCount - 1) {
-                distributedMoney += money % userCount;
-            }
-
             Money receiveMoney = Money.builder()
                     .moneyTypeEnum(MoneyTypeEnum.RECEIVE)
                     .room(room)
-                    .userId(user.getUserId())
+                    .userId(null)
                     .token(token)
                     .money(distributedMoney)
                     .userCount(1)
@@ -205,7 +202,6 @@ public class MoneyServiceImpl implements MoneyService {
                     .build();
 
             receiveMoneyHistoryList.add(receiveMoney);
-            money = money - distributedMoney;
         }
 
         return receiveMoneyHistoryList;

@@ -9,5 +9,5 @@ public interface MoneyService {
 
     int getReceiveMoney(Long userId, String roomId, String token);
 
-    SpreadHistoryResponseVO getSpreadHistory(String userId, String token);
+    SpreadHistoryResponseVO getSpreadHistory(Long userId, String token);
 }
