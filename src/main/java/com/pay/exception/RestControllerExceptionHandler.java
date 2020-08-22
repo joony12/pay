@@ -1,7 +1,7 @@
 package com.pay.exception;
 
-import com.pay.domain.ErrorResponseVO;
-import com.pay.errorEnum.ErrorCodeEnum;
+import com.pay.util.error.ErrorTypeEnum;
+import com.pay.vo.ErrorResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,62 +17,43 @@ public class RestControllerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseVO unknownException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorCodeEnum.ERROR_9999);
+        return getErrorResponse(ErrorTypeEnum.ERROR_9999);
     }
 
     @ExceptionHandler(value = {UnAuthorizedException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseVO unAuthorizedException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorCodeEnum.ERROR_0001);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0001);
     }
 
     @ExceptionHandler(value = {TokenCreateException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseVO tokenCreateException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorCodeEnum.ERROR_0002);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0002);
     }
 
     @ExceptionHandler(value = {NotFoundUserException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseVO notFoundUserException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorCodeEnum.ERROR_0003);
-    }
-
-    @ExceptionHandler(value = {NotFoundRoomException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponseVO notFoundRoomException(Exception ex) {
-        log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorCodeEnum.ERROR_0004);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0003);
     }
 
     @ExceptionHandler(value = {NotParticipateRoomException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseVO notParticipateRoomException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorCodeEnum.ERROR_0005);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0005);
     }
 
     @ExceptionHandler(value = {ReceiveMoneyTimeOutException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseVO receiveMoneyTimeOutException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorCodeEnum.ERROR_0006);
+        return getErrorResponse(ErrorTypeEnum.ERROR_0006);
     }
 
-    @ExceptionHandler(value = {NotFoundSpreadListException.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponseVO notFoundSpreadListException(Exception ex) {
-        log.error(ex.getMessage(), ex);
-        return getErrorResponse(ErrorCodeEnum.ERROR_0007);
-    }
-
-    private ErrorResponseVO getErrorResponse(ErrorCodeEnum errorCodeEnum) {
+    private ErrorResponseVO getErrorResponse(ErrorTypeEnum errorTypeEnum) {
         return ErrorResponseVO.builder()
-                .errorCode(errorCodeEnum.getErrorCode())
-                .errorMessage(errorCodeEnum.getErrorMessage())
+                .errorCode(errorTypeEnum.getErrorCode())
+                .errorMessage(errorTypeEnum.getErrorMessage())
                 .build();
     }
 }

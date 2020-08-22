@@ -1,7 +1,7 @@
 package com.pay.interceptor;
 
-import com.pay.domain.HeaderRequestVO;
 import com.pay.exception.UnAuthorizedException;
+import com.pay.vo.HeaderRequestVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -21,8 +21,6 @@ public class RequestParamCheckInterceptor implements HandlerInterceptor {
         if (!headerRequestVO.isValid()) {
             throw new UnAuthorizedException();
         }
-
-        request.getSession().setAttribute("headerRequestVO", headerRequestVO);
         return true;
     }
 
@@ -33,8 +31,8 @@ public class RequestParamCheckInterceptor implements HandlerInterceptor {
 
         return HeaderRequestVO.builder()
                 .valid(validRequestParam)
-                .userId("user_01")
-                .roomId("room_01")
+                .userId(userId)
+                .roomId(roomId)
                 .build();
     }
 

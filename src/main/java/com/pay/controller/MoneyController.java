@@ -1,46 +1,44 @@
 package com.pay.controller;
 
-import com.pay.application.MoneyApplication;
-import com.pay.domain.HeaderRequestVO;
-import com.pay.domain.money.SpreadMoney;
-import com.pay.domain.money.vo.SpreadMoneyRequestVO;
+import com.pay.service.money.MoneyService;
+import com.pay.service.token.TokenService;
+import com.pay.util.header.HeaderCode;
+import com.pay.vo.SpreadHistoryResponseVO;
+import com.pay.vo.SpreadRequestVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/money/v1")
 @RequiredArgsConstructor
 public class MoneyController {
 
-    private final MoneyApplication moneyApplication;
+    private final MoneyService moneyService;
+    private final TokenService tokenService;
 
     @PostMapping("/spread")
-    public String spread(@SessionAttribute(name = "headerRequestVO") HeaderRequestVO headerRequestVO,
-                         @RequestBody SpreadMoneyRequestVO spreadMoneyRequestVO) {
+    public String spread(@RequestHeader(value = HeaderCode.X_USER_ID) Long userId,
+                         @RequestHeader(value = HeaderCode.X_ROOM_ID) String roomId,
+                         @RequestBody SpreadRequestVO spreadRequestVO) {
 
-        return moneyApplication.spread(headerRequestVO, spreadMoneyRequestVO);
+        String token = tokenService.getToken(userId);
+        moneyService.spread(spreadRequestVO, userId, roomId, token);
+        return token;
     }
 
-    @GetMapping("/receive/tokens/{token}")
-    public Long receive(@SessionAttribute(name = "headerRequestVO") HeaderRequestVO headerRequestVO,
-                        @PathVariable(value = "token") String token) {
-        return moneyApplication.receive(headerRequestVO, token);
+    @PutMapping("/receive/tokens/{token}")
+    public int receive(@RequestHeader(value = HeaderCode.X_USER_ID) Long userId,
+                       @RequestHeader(value = HeaderCode.X_ROOM_ID) String roomId,
+                       @PathVariable(value = "token") String token) {
+
+        return moneyService.getReceiveMoney(userId, roomId, token);
     }
 
     @GetMapping("/spread/tokens/{token}")
-    public Page<SpreadMoney> spreadList(@SessionAttribute(name = "headerRequestVO") HeaderRequestVO headerRequestVO,
-                                        @PathVariable(value = "token") String token,
-                                        @PageableDefault(size = 20, sort = "startTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        return moneyApplication.spreadList(headerRequestVO, token, pageable);
+    public SpreadHistoryResponseVO getSpreadHistory(@RequestHeader(value = HeaderCode.X_USER_ID) Long userId,
+                                                    @RequestHeader(value = HeaderCode.X_ROOM_ID) String roomId,
+                                                    @PathVariable(value = "token") String token) {
+
+        return moneyService.getSpreadHistory(userId, roomId, token);
     }
 }
