@@ -17,9 +17,9 @@ public enum ErrorTypeEnum {
     ERROR_0010("error_0010", "유효하지 않은 토큰 정보입니다."),
     ERROR_9999("error_9999", "알 수 없는 에러, 관리자에게 문의하세요.");
 
-    private final String errorCode;
+    private String errorCode;
 
-    private final String errorMessage;
+    private String errorMessage;
 
     ErrorTypeEnum(String errorCode, String errorMessage) {
         this.errorCode = errorCode;

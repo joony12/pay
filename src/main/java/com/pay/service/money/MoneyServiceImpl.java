@@ -48,7 +48,7 @@ public class MoneyServiceImpl implements MoneyService {
         int userCount = spreadRequestVO.getUserCount();
 
         Money spreadMoney = createSpreadMoneyHistory(user, room, money, userCount, token);
-        List<Money> receiveMoneys = createReceiveMoneyHistory(user, room, money, userCount, token);
+        List<Money> receiveMoneys = createReceiveMoneyHistory(room, money, userCount, token);
 
         monies.add(spreadMoney);
         monies.addAll(receiveMoneys);
@@ -118,7 +118,7 @@ public class MoneyServiceImpl implements MoneyService {
     }
 
     private void checkEnableSearch(Money spreadMoney, Long userId) {
-        if (spreadMoney.getUserId() != userId) {
+        if (!spreadMoney.getUserId().equals(userId)) {
             throw new SpreadHistorySearchException("뿌린 사람 자신만 조회를 할 수 있습니다.");
         }
 
@@ -183,7 +183,7 @@ public class MoneyServiceImpl implements MoneyService {
                 .build();
     }
 
-    private List<Money> createReceiveMoneyHistory(User user, Room room, int money, int userCount, String token) {
+    private List<Money> createReceiveMoneyHistory(Room room, int money, int userCount, String token) {
         List<Money> receiveMoneyHistoryList = new ArrayList<>();
 
         for (int i = 0; i < userCount; i++) {
